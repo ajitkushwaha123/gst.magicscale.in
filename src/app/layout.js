@@ -70,8 +70,40 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "MagicScale",
+    url: "https://fssai.magicscale.in",
+    logo: "https://fssai.magicscale.in/og-image.png",
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+91-8178739633",
+      contactType: "customer service",
+      email: "support@magicscale.in",
+      availableLanguage: ["English", "Hindi"],
+    },
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "MagicScale FSSAI Licensing",
+    url: "https://fssai.magicscale.in",
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+      </head>
       <body className={`${poppins.variable} font-poppins antialiased`}>
         {/* <PostHogProvider> */}
 
