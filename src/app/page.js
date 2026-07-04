@@ -107,7 +107,7 @@ export default function Page() {
     image: "https://fssai.magicscale.in/og-image.png",
     "@id": "https://fssai.magicscale.in",
     url: "https://fssai.magicscale.in",
-    telephone: "+918178739633",
+    telephone: "+918826073117",
     priceRange: "₹999 - ₹2500",
     address: {
       "@type": "PostalAddress",

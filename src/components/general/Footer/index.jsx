@@ -15,8 +15,12 @@ export default function Footer() {
       className="w-full border-t border-gray-200 dark:border-gray-800 py-6 px-6 md:px-12 text-sm text-gray-600 dark:text-gray-400"
     >
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <p className="text-center">
+        <p className="text-center md:text-left">
           © {currentYear} {WEBSITE_NAME}. All rights reserved.
+          <br className="hidden md:inline" />
+          <span className="block md:inline md:ml-1 text-xs opacity-80 mt-1 md:mt-0">
+            A brand of MAGIC SCALE RESTAURANT CONSULTANT/VISHAL KUSHWAHA
+          </span>
         </p>
 
         <nav className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">

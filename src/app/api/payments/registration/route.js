@@ -44,22 +44,6 @@ export async function POST(req) {
       );
     }
 
-    const existingRegistration = await Registration.findOne({
-      phone,
-      paymentStatus: "SUCCESS",
-    });
-
-    if (existingRegistration) {
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            "This phone number is already registered. Please use a different number or contact support.",
-        },
-        { status: 409 },
-      );
-    }
-
     const plan = PLANS[planId];
 
     if (!plan || !plan.isActive) {

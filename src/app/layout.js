@@ -78,7 +78,7 @@ export default function RootLayout({ children }) {
     logo: "https://fssai.magicscale.in/og-image.png",
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: "+91-8178739633",
+      telephone: "+91-8826073117",
       contactType: "customer service",
       email: "support@magicscale.in",
       availableLanguage: ["English", "Hindi"],

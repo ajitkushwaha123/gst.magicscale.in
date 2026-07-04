@@ -116,6 +116,6 @@ export const PLANS = {
       "Mobile Number"
     ],
     isActive: true,
-    whatsappSupportLink: "https://wa.me/918178739633"
+    whatsappSupportLink: "https://wa.me/918826073117"
   }
 };
