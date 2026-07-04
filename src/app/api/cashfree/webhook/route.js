@@ -2,6 +2,7 @@ import crypto from "crypto";
 import dbConnect from "@/lib/db-connect";
 import { NextResponse } from "next/server";
 import { Registration } from "@/models/Registration";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 const STATUS_PRIORITY = {
   CREATED: 0,
@@ -47,18 +48,47 @@ async function updateRegistrationStatus({ orderId, status, paymentId }) {
 
 const handlers = {
   PAYMENT_SUCCESS_WEBHOOK: async (data) => {
+    const orderId = data?.order?.order_id;
     await updateRegistrationStatus({
-      orderId: data?.order?.order_id,
+      orderId,
       status: "SUCCESS",
       paymentId: data?.payment?.cf_payment_id,
     });
+    const registration = await Registration.findOne({ orderId });
+    if (registration) {
+      const posthog = getPostHogClient();
+      posthog.capture({
+        distinctId: registration.phone,
+        event: "payment_completed",
+        properties: {
+          order_id: orderId,
+          payment_id: data?.payment?.cf_payment_id,
+          amount: registration.amount,
+          plan_id: registration.planId,
+        },
+      });
+    }
   },
 
   PAYMENT_FAILED_WEBHOOK: async (data) => {
+    const orderId = data?.order?.order_id;
     await updateRegistrationStatus({
-      orderId: data?.order?.order_id,
+      orderId,
       status: "FAILED",
     });
+    const registration = await Registration.findOne({ orderId });
+    if (registration) {
+      const posthog = getPostHogClient();
+      posthog.capture({
+        distinctId: registration.phone,
+        event: "payment_failed",
+        properties: {
+          order_id: orderId,
+          amount: registration.amount,
+          plan_id: registration.planId,
+        },
+      });
+    }
   },
 
   USER_DROPPED_WEBHOOK: async (data) => {

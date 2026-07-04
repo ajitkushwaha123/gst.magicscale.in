@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import posthog from "posthog-js";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
@@ -137,6 +138,15 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
         setIsUploading(false);
 
+        posthog.capture("registration_submitted", {
+          business_type: values.businessActivity,
+          turnover: values.turnover,
+          plan_id: plan._id,
+          has_profile_pic: !!profilePicUrl,
+          has_aadhar: !!aadharUrl,
+          has_pan: !!panUrl,
+        });
+
         await registration.mutateAsync({
           name: values.name.trim(),
           phone: values.phone.trim(),
@@ -183,6 +193,10 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
   const handleNextStep2 = async () => {
     const errors = await formik.validateForm();
     if (!errors.turnover && !errors.name && !errors.phone) {
+      posthog.capture("turnover_selected", {
+        turnover: formik.values.turnover,
+        business_type: formik.values.businessActivity,
+      });
       try {
         setIsSavingLead(true);
         await fetch("/api/lead", {
@@ -195,6 +209,11 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
             turnover: formik.values.turnover,
             planId: plan?._id
           }),
+        });
+        posthog.capture("lead_saved", {
+          business_type: formik.values.businessActivity,
+          turnover: formik.values.turnover,
+          plan_id: plan?._id,
         });
       } catch (error) {
         console.error("Failed to save lead", error);
@@ -326,6 +345,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           key={type.id}
                           onClick={() => {
                             formik.setFieldValue("businessActivity", type.id);
+                            posthog.capture("business_type_selected", { business_type: type.id });
                             setTimeout(() => setStep(2), 200);
                           }}
                           className={`group cursor-pointer rounded-[14px] border-2 p-2 flex flex-col gap-2 transition-all duration-300 ${isSelected

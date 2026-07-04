@@ -3,6 +3,7 @@ import { Registration } from "@/models/Registration";
 import dbConnect from "@/lib/db-connect";
 import { createCashfreeOrder } from "@/lib/cashfree";
 import { NextResponse } from "next/server";
+import { getPostHogClient } from "@/lib/posthog-server";
 
 export async function POST(req) {
   let registration = null;
@@ -103,6 +104,18 @@ export async function POST(req) {
     registration.orderId = order.order_id;
     registration.paymentSessionId = order.payment_session_id;
     await registration.save();
+
+    const posthog = getPostHogClient();
+    posthog.capture({
+      distinctId: phone,
+      event: "registration_created",
+      properties: {
+        plan_id: plan._id,
+        amount: plan.price,
+        order_id: order.order_id,
+        registration_id: registration._id.toString(),
+      },
+    });
 
     return NextResponse.json(
       {

@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import React, { useRef, useState, useEffect, Suspense } from "react";
+import posthog from "posthog-js";
 import { getRegistrationByOrderId } from "@/services/payment";
 import SectionWrapper from "@/components/general/SectionWrapper";
 import {
@@ -48,11 +49,22 @@ function TicketPageContent() {
     };
     
     fetchData();
-    
+
     return () => {
       isMounted = false;
     };
   }, [orderId]);
+
+  useEffect(() => {
+    if (!isLoading && registrationDetails?.registration) {
+      const reg = registrationDetails.registration;
+      posthog.capture("payment_success_page_viewed", {
+        order_id: reg.orderId,
+        amount: reg.amount,
+        plan_id: reg.planId,
+      });
+    }
+  }, [isLoading, registrationDetails]);
 
   if (isLoading) {
     return (
@@ -227,6 +239,7 @@ function TicketPageContent() {
                   href={sessionDetails.whatsappGroupLink}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => posthog.capture("whatsapp_join_clicked", { order_id: sessionDetails.orderId })}
                   className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-xl active:bg-green-700 transition flex items-center justify-center gap-2 group shadow-md shadow-slate-900/5 text-sm"
                 >
                   Join Whatsapp
