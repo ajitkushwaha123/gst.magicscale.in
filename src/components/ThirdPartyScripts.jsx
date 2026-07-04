@@ -5,7 +5,7 @@ import { useEffect } from "react";
 // Easily manage multiple tracking IDs here
 const CONFIG = {
   googleAnalyticsIds: ["G-XVLEDXG07G"], // You can add multiple GA IDs here in the future
-  metaPixelIds: [], // Add or remove Meta Pixel IDs here
+  metaPixelIds: ["1223249586587487"], // Add or remove Meta Pixel IDs here
 };
 
 export default function ThirdPartyScripts() {
@@ -84,5 +84,20 @@ export default function ThirdPartyScripts() {
     };
   }, []);
 
-  return null;
+  if (CONFIG.metaPixelIds.length === 0) return null;
+
+  return (
+    <noscript>
+      {CONFIG.metaPixelIds.map((id) => (
+        <img
+          key={id}
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          src={`https://www.facebook.com/tr?id=${id}&ev=PageView&noscript=1`}
+          alt=""
+        />
+      ))}
+    </noscript>
+  );
 }
