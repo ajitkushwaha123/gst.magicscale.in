@@ -1,5 +1,5 @@
 import { Registration } from "@/models/Registration";
-import { Plan } from "@/models/Plan";
+import { PLANS } from "@/constants/plans";
 import dbConnect from "@/lib/db-connect";
 import { NextResponse } from "next/server";
 
@@ -33,7 +33,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    const plan = await Plan.findById(registration.planId).lean();
+    const plan = PLANS[registration.planId] || null;
 
     return NextResponse.json({
       success: true,

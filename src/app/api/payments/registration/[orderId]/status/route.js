@@ -1,5 +1,4 @@
 import { Registration } from "@/models/Registration";
-import { Plan } from "@/models/Plan";
 import dbConnect from "@/lib/db-connect";
 import { NextResponse } from "next/server";
 
@@ -32,8 +31,6 @@ export async function GET(req, { params }) {
         { status: 404 },
       );
     }
-
-    const plan = await Plan.findById(registration.planId).lean();
 
     return NextResponse.json({
       success: true,

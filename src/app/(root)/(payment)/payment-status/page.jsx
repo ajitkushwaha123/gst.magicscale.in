@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Loader from "@/components/general/states/loader";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -107,6 +107,12 @@ function PaymentStatusContent() {
   );
 }
 
+
+
 export default function PaymentStatusPage() {
-  return <PaymentStatusContent />;
+  return (
+    <Suspense fallback={<Loader title="Loading payment status..." />}>
+      <PaymentStatusContent />
+    </Suspense>
+  );
 }

@@ -1,10 +1,11 @@
 "use client";
+import { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { AlertCircle, RefreshCw, ArrowLeft, HelpCircle } from "lucide-react";
 import { useAppConfigStore } from "@/stores/app-config.store";
 import PayButton from "@/components/general/Payment/PayButton";
 
-const Page = () => {
+const FailedContent = () => {
   const plan = useAppConfigStore((state) => state.plan);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -86,6 +87,14 @@ const Page = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FailedContent />
+    </Suspense>
   );
 };
 

@@ -247,5 +247,9 @@ function TicketPageContent() {
 }
 
 export default function Page() {
-  return <TicketPageContent />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TicketPageContent />
+    </Suspense>
+  );
 }
