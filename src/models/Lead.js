@@ -12,11 +12,11 @@ const leadSchema = new mongoose.Schema(
     },
     businessActivity: {
       type: String,
-      required: true,
+      required: false,
     },
     turnover: {
       type: String,
-      required: true,
+      required: false,
     },
     planId: {
       type: String,

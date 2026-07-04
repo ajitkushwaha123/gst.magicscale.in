@@ -112,27 +112,31 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
         <div className="flex-1 overflow-y-auto min-h-0 bg-white">
           <div className="px-5 sm:px-8 py-6">
-            <div className="space-y-5">
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-zinc-900">Full Name</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Full Name</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-zinc-400 group-focus-within:text-[#22c55e] transition-colors" />
+                  </div>
                   <Input
                     name="name"
                     placeholder="e.g. Rahul Sharma"
                     value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="h-12 pl-10 bg-zinc-50/50 border-zinc-200 focus-visible:bg-white focus-visible:ring-[#22c55e] focus-visible:border-[#22c55e] rounded-xl text-sm transition-all"
+                    className="h-14 pl-11 bg-zinc-50/80 hover:bg-zinc-50 border-zinc-200 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#22c55e]/20 focus-visible:border-[#22c55e] rounded-xl text-base font-medium transition-all shadow-sm"
                   />
                 </div>
                 <FieldError touched={formik.touched.name} error={formik.errors.name} />
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-sm font-semibold text-zinc-900">WhatsApp Number</label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+              <div className="space-y-2">
+                <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">WhatsApp Number</label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-zinc-400 group-focus-within:text-[#22c55e] transition-colors" />
+                  </div>
                   <Input
                     name="phone"
                     type="tel"
@@ -145,19 +149,19 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                       const cleanValue = e.target.value.replace(/\D/g, "");
                       formik.setFieldValue("phone", cleanValue);
                     }}
-                    className="h-12 pl-10 bg-zinc-50/50 border-zinc-200 focus-visible:bg-white focus-visible:ring-[#22c55e] focus-visible:border-[#22c55e] rounded-xl text-sm transition-all"
+                    className="h-14 pl-11 bg-zinc-50/80 hover:bg-zinc-50 border-zinc-200 focus-visible:bg-white focus-visible:ring-2 focus-visible:ring-[#22c55e]/20 focus-visible:border-[#22c55e] rounded-xl text-base font-medium transition-all shadow-sm"
                   />
                 </div>
                 <FieldError touched={formik.touched.phone} error={formik.errors.phone} />
               </div>
 
-              <div className="flex items-center justify-center gap-2 text-xs font-medium text-zinc-500 bg-zinc-50 py-2.5 rounded-lg border border-zinc-100 mt-2">
-                <Lock className="w-3.5 h-3.5 text-zinc-400" />
+              <div className="flex items-center justify-center gap-2 text-xs font-medium text-emerald-700 bg-emerald-50 py-3 rounded-xl border border-emerald-100/50 mt-4">
+                <Lock className="w-4 h-4 text-emerald-500" />
                 Your information is 100% encrypted & secure
               </div>
 
               {registration.error && (
-                <p className="text-sm font-medium text-red-500 text-center bg-red-50 py-2 rounded-lg mt-2">
+                <p className="text-sm font-medium text-red-500 text-center bg-red-50 py-3 rounded-xl mt-2">
                   {registration.error.message || "Something went wrong. Please try again."}
                 </p>
               )}
@@ -165,22 +169,22 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
           </div>
         </div>
 
-        <div className="px-5 py-4 sm:px-8 sm:py-5 bg-zinc-50 shrink-0 border-t border-zinc-100 mt-auto">
-          <div className="bg-white rounded-xl p-3 border border-zinc-200 flex items-center justify-between mb-4 shadow-sm">
-            <span className="text-sm font-medium text-zinc-600">{plan?.title || "FSSAI License"}</span>
-            <span className="text-lg font-bold text-zinc-900">₹{plan?.price ?? 0}</span>
-          </div>
-
-          <Button type="button" onClick={formik.handleSubmit} disabled={isLoading || !plan?._id} className="h-12 w-full bg-[#22c55e] hover:bg-[#22c55e]/90 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all">
+        <div className="px-5 py-5 sm:px-8 bg-white shrink-0 border-t border-zinc-100 mt-auto">
+          <Button 
+            type="button" 
+            onClick={formik.handleSubmit} 
+            disabled={isLoading || !plan?._id} 
+            className="h-14 w-full bg-gradient-to-r from-[#22c55e] to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white text-lg font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all active:scale-[0.98]"
+          >
             {isLoading ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin" />
                 Processing...
               </>
             ) : (
               <>
-                Proceed to Payment
-                <CheckCircle2 className="w-4 h-4" />
+                Submit Application
+                <CheckCircle2 className="w-5 h-5 ml-1" />
               </>
             )}
           </Button>

@@ -9,9 +9,9 @@ export async function POST(req) {
     const body = await req.json();
     const { name, phone, businessActivity, turnover, planId } = body;
 
-    if (!name?.trim() || !phone?.trim() || !businessActivity?.trim() || !turnover?.trim()) {
+    if (!name?.trim() || !phone?.trim()) {
       return NextResponse.json(
-        { success: false, message: "Missing required fields" },
+        { success: false, message: "Name and Phone are required" },
         { status: 400 }
       );
     }
@@ -21,8 +21,8 @@ export async function POST(req) {
       { phone: phone.trim() },
       {
         name: name.trim(),
-        businessActivity: businessActivity.trim(),
-        turnover: turnover.trim(),
+        businessActivity: businessActivity?.trim() || "",
+        turnover: turnover?.trim() || "",
         planId: planId || null,
       },
       { new: true, upsert: true }
