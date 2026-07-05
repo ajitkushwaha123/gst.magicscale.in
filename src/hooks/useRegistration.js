@@ -22,21 +22,21 @@ export const useRegistration = () => {
       
       setData(responseData);
 
-      const cashfree = await load({
-        mode:
-          process.env.NEXT_PUBLIC_CASHFREE_ENV === "production"
-            ? "production"
-            : "sandbox",
-      });
+      // const cashfree = await load({
+      //   mode:
+      //     process.env.NEXT_PUBLIC_CASHFREE_ENV === "production"
+      //       ? "production"
+      //       : "sandbox",
+      // });
 
-      if (!cashfree) {
-        throw new Error("Failed to initialize Cashfree");
-      }
+      // if (!cashfree) {
+      //   throw new Error("Failed to initialize Cashfree");
+      // }
 
-      await cashfree.checkout({
-        paymentSessionId: responseData?.data?.paymentSessionId,
-        redirectTarget: "_self",
-      });
+      // await cashfree.checkout({
+      //   paymentSessionId: responseData?.data?.paymentSessionId,
+      //   redirectTarget: "_self",
+      // });
       
       return responseData;
     } catch (err) {

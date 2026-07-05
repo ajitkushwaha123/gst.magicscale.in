@@ -70,7 +70,7 @@ export const Hero = () => {
         <span className="flex items-center gap-1.5"><span className="text-emerald-500 bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-0.5">✓</span> 24/7 Expert Support</span>
       </div>
 
-      <div className="animate-in fade-in zoom-in-95 duration-700 delay-700 fill-mode-both">
+      <div className="w-full animate-in fade-in zoom-in-95 duration-700 delay-700 fill-mode-both">
         <HeroVideoDialog
           className="block w-full"
           animationStyle="from-center"
