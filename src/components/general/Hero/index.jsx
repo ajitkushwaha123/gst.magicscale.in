@@ -70,14 +70,22 @@ export const Hero = () => {
         <span className="flex items-center gap-1.5"><span className="text-emerald-500 bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-0.5">✓</span> 24/7 Expert Support</span>
       </div>
 
-      <div className="w-full animate-in fade-in zoom-in-95 duration-700 delay-700 fill-mode-both">
-        <HeroVideoDialog
-          className="block w-full"
-          animationStyle="from-center"
-          videoSrc="https://www.youtube.com/embed/wP5GhASVhJc"
-          thumbnailSrc="/thumbnail.webp"
-          thumbnailAlt="Hero Video"
-        />
+      <div className="w-full max-w-6xl mx-auto animate-in fade-in zoom-in-95 duration-700 delay-700 ">
+        <div className="group relative overflow-hidden rounded-2xl md:rounded-[24px] border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-2 sm:p-4">
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+            <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-teal-500/10 blur-3xl" />
+          </div>
+
+          <div className="relative z-10 overflow-hidden rounded-xl md:rounded-[16px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex items-center justify-center p-0 md:p-0">
+            <img
+              src="/fssai.webp"
+              alt="FSSAI Certificate Sample"
+              className="w-full h-auto md:h-[500px] object-contain md:object-cover md:object-top transition-transform duration-700 group-hover:scale-[1.02]"
+              loading="lazy"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

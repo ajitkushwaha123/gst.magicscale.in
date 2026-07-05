@@ -1,7 +1,6 @@
 import { PLANS } from "@/constants/plans";
 import { Registration } from "@/models/Registration";
 import dbConnect from "@/lib/db-connect";
-import { createCashfreeOrder } from "@/lib/cashfree";
 import { NextResponse } from "next/server";
 import { getPostHogClient } from "@/lib/posthog-server";
 
@@ -74,19 +73,7 @@ export async function POST(req) {
 
     const orderId = `ORDER_${Date.now()}`;
 
-    const order = await createCashfreeOrder({
-      orderId,
-      amount: plan.price,
-      currency: plan.currency || "INR",
-      customerId: registration._id.toString(),
-      customerName: name,
-      customerPhone: phone,
-      customerEmail: email || `${phone}@placeholder.com`,
-      returnUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/payment-status?order_id={order_id}`,
-    });
-
-    registration.orderId = order.order_id;
-    registration.paymentSessionId = order.payment_session_id;
+    registration.orderId = orderId;
     await registration.save();
 
     const posthog = getPostHogClient();
@@ -96,7 +83,7 @@ export async function POST(req) {
       properties: {
         plan_id: plan._id,
         amount: plan.price,
-        order_id: order.order_id,
+        order_id: orderId,
         registration_id: registration._id.toString(),
       },
     });
@@ -104,11 +91,10 @@ export async function POST(req) {
     return NextResponse.json(
       {
         success: true,
-        message: "Registration created successfully. Proceed to payment.",
+        message: "Registration created successfully.",
         data: {
           registrationId: registration._id,
-          orderId: order.order_id,
-          paymentSessionId: order.payment_session_id,
+          orderId: orderId,
         },
       },
       { status: 201 },
