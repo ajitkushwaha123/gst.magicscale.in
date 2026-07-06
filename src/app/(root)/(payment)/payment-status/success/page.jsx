@@ -63,8 +63,9 @@ function SuccessPageContent() {
       });
 
       if (typeof window !== "undefined" && window.fbq) {
+        const purchaseValue = parseFloat(reg.amount || registrationDetails?.plan?.price || 0);
         window.fbq("track", "Purchase", {
-          value: parseFloat(reg.amount),
+          value: purchaseValue,
           currency: "INR"
         });
       }
