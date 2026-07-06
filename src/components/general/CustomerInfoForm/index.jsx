@@ -56,6 +56,10 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
           plan_id: plan._id,
         });
 
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("track", "Lead");
+        }
+
         // Save Lead to Google Sheets / DB before Payment
         try {
           await fetch("/api/lead", {

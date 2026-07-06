@@ -61,6 +61,13 @@ function SuccessPageContent() {
         amount: reg.amount,
         plan_id: reg.planId,
       });
+
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Purchase", {
+          value: parseFloat(reg.amount),
+          currency: "INR"
+        });
+      }
     }
   }, [isLoading, registrationDetails]);
 
