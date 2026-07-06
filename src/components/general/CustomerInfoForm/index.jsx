@@ -123,6 +123,12 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
             planId: plan?._id
           }),
         });
+
+        // Fire Lead events properly
+        posthog.capture("lead_captured", { plan_id: plan?._id });
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("track", "Lead", { content_name: "FSSAI Application" });
+        }
       } catch (error) {
         console.error("Failed to save lead", error);
       } finally {
@@ -178,7 +184,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={(val) => { if (!registration.isPending) onOpenChange(val); }}>
-      <DialogContent className="z-[100] border-0 p-0 w-full h-[100dvh] sm:h-auto sm:max-h-[95vh] sm:w-[95vw] sm:max-w-[480px] bg-white sm:rounded-[24px] shadow-2xl flex flex-col overflow-hidden">
+      <DialogContent className="z-[100] border-0 p-0 w-[95vw] max-w-[480px] bg-white rounded-[24px] shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
         
         <div className="px-6 pt-8 pb-5 sm:px-8 bg-white border-b border-zinc-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] relative z-10">
           <DialogHeader>
@@ -215,8 +221,12 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
             
             try {
               setIsRedirecting(true);
-              posthog.capture("registration_submitted", { plan_id: plan._id });
-              if (typeof window !== "undefined" && window.fbq) window.fbq("track", "Lead");
+              
+              // Fire Checkout events
+              posthog.capture("checkout_initiated", { plan_id: plan._id, amount: plan.price });
+              if (typeof window !== "undefined" && window.fbq) {
+                window.fbq("track", "InitiateCheckout", { value: parseFloat(plan.price), currency: "INR" });
+              }
 
               await registration.mutateAsync({
                 name: values.name.trim(),
@@ -240,8 +250,8 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
           }}
         >
           {({ values, errors, touched, setFieldValue, handleChange, handleBlur, setTouched, validateForm }) => (
-            <Form className="flex-1 flex flex-col min-h-0 bg-white">
-              <div className="flex-1 overflow-x-hidden overflow-y-auto px-6 py-6 sm:px-8 relative">
+            <Form className="flex flex-col bg-white overflow-hidden">
+              <div className="overflow-x-hidden overflow-y-auto px-6 py-6 sm:px-8 relative">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
                     key={currentStep}
@@ -429,7 +439,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
               </div>
 
               {/* Footer Controls */}
-              <div className="px-6 py-5 sm:px-8 bg-white border-t border-zinc-100 mt-auto flex items-center gap-3">
+              <div className="px-6 py-5 sm:px-8 bg-white border-t border-zinc-100 flex items-center gap-3">
                 {currentStep > 0 && (
                   <Button
                     type="button"
