@@ -4,6 +4,29 @@ import dbConnect from "@/lib/db-connect";
 import { NextResponse } from "next/server";
 import { getPostHogClient } from "@/lib/posthog-server";
 import { initiatePaytmTransaction } from "@/lib/paytm";
+import { uploadToS3 } from "@/lib/aws/s3";
+import mime from "mime-types";
+
+async function processFile(fileData, fieldName) {
+  if (!fileData || !fileData.startsWith("data:")) return fileData;
+  try {
+    const matches = fileData.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) return fileData;
+    const type = matches[1];
+    const buffer = Buffer.from(matches[2], "base64");
+    const extension = mime.extension(type) || "jpg";
+    const fileName = `${fieldName}-${Date.now()}.${extension}`;
+    const result = await uploadToS3({
+      file: buffer,
+      fileName,
+      folder: "fssai/documents"
+    });
+    return result.url;
+  } catch (error) {
+    console.error(`S3 Upload error for ${fieldName}:`, error);
+    return fileData;
+  }
+}
 
 export async function POST(req) {
   let registration = null;
@@ -56,6 +79,10 @@ export async function POST(req) {
       );
     }
 
+    const processedProfilePicUrl = await processFile(profilePicUrl, "profilePic");
+    const processedAadharUrl = await processFile(aadharUrl, "aadhar");
+    const processedPanUrl = await processFile(panUrl, "pan");
+
     registration = await Registration.create({
       name: name.trim(),
       phone: phone.trim(),
@@ -64,9 +91,9 @@ export async function POST(req) {
       businessName: businessName?.trim() || "",
       businessActivity: businessActivity?.trim() || "",
       agreedToPrivacy: agreedToPrivacy || false,
-      profilePicUrl: profilePicUrl || "",
-      aadharUrl: aadharUrl || "",
-      panUrl: panUrl || "",
+      profilePicUrl: processedProfilePicUrl || "",
+      aadharUrl: processedAadharUrl || "",
+      panUrl: processedPanUrl || "",
       planId: plan._id,
       amount: plan.price,
       paymentStatus: "PENDING",

@@ -145,7 +145,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
     setCurrentStep((prev) => prev - 1);
   };
 
-  const handleFileUpload = (e, fieldName, setFieldValue) => {
+  const handleFileUpload = async (e, fieldName, setFieldValue) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -154,12 +154,26 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFieldValue(fieldName, reader.result);
-      toast.success("Document uploaded temporarily!");
-    };
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const uploadPromise = fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    }).then(async (res) => {
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to upload file");
+      }
+      setFieldValue(fieldName, data.url);
+      return data;
+    });
+
+    toast.promise(uploadPromise, {
+      loading: "Uploading document...",
+      success: "Document uploaded successfully!",
+      error: (err) => err.message || "Failed to upload document.",
+    });
   };
 
   const slideVariants = {
@@ -399,8 +413,8 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           { id: "panUrl", label: "PAN Card", desc: "Clear image of your PAN card", asset: "/assets/images/pan-card.webp" },
                         ].map((doc) => {
                           const fileData = values[doc.id];
-                          const isImage = fileData && fileData.startsWith("data:image/");
-                          const isPdf = fileData && fileData.startsWith("data:application/pdf");
+                          const isImage = fileData && (fileData.startsWith("data:image/") || fileData.match(/\.(jpeg|jpg|gif|png|webp)($|\?)/i) || (fileData.startsWith("http") && !fileData.match(/\.pdf($|\?)/i)));
+                          const isPdf = fileData && (fileData.startsWith("data:application/pdf") || fileData.match(/\.pdf($|\?)/i));
 
                           return (
                           <div key={doc.id} className="space-y-1.5">

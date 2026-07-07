@@ -19,9 +19,6 @@ export async function POST(req) {
       });
     }
 
-    // Paytm callback parameters typically include CHECKSUMHASH
-    // and other transaction details like ORDERID, TXNAMOUNT, STATUS, etc.
-
     const paytmChecksum = bodyObj.CHECKSUMHASH;
     delete bodyObj.CHECKSUMHASH;
 
@@ -79,8 +76,7 @@ export async function POST(req) {
         },
       });
     }
-
-    // Redirect user to the payment status page
+    
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === "production" ? "https://fssai.magicscale.in" : "http://localhost:3000");
     const redirectUrl = new URL(`/payment-status?order_id=${orderId}`, baseUrl);
     
