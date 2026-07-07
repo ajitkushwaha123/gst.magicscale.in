@@ -486,7 +486,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                       <Loader2 className="h-6 w-6 animate-spin" />
                     ) : (
                       <>
-                        Pay & Submit <Lock className="w-4 h-4 ml-1" />
+                        Submit <Lock className="w-4 h-4 ml-1" />
                       </>
                     )}
                   </Button>
