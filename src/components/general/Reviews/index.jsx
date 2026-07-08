@@ -26,7 +26,7 @@ export default function Testimonials() {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "200px" }}
         className="mx-auto mb-12 max-w-3xl text-center"
       >
         <Title
@@ -50,7 +50,7 @@ export default function Testimonials() {
             custom={i}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "200px" }}
             variants={cardVariants}
             className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 md:p-8 backdrop-blur-lg shadow-lg dark:shadow-black/20 bg-white/60 dark:bg-[#10101a]/70 transition-colors"
           >
@@ -100,7 +100,7 @@ export default function Testimonials() {
     //       custom={i}
     //       initial="hidden"
     //       whileInView="visible"
-    //       viewport={{ once: true }}
+    //       viewport={{ once: true, margin: "200px" }}
     //       variants={cardVariants}
     //       className="rounded-2xl border border-neutral-200 dark:border-neutral-700 p-4 md:p-8 backdrop-blur-lg shadow-lg dark:shadow-black/20 bg-white/60 dark:bg-[#10101a]/70 transition-colors"
     //     >

@@ -55,7 +55,7 @@ function MasonryItem({ img, index }) {
       className="group relative mb-4 break-inside-avoid overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2, margin: "200px" }}
       transition={{
         duration: 0.5,
         delay: Math.min(index * 0.04, 0.3),
@@ -89,7 +89,7 @@ export default function MasonryGallery() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "200px" }}
           className="mx-auto mb-12 max-w-3xl text-center"
         >
           <Title

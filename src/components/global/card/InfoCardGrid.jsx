@@ -11,7 +11,7 @@ export default function InfoCardGrid({ cardData = [] }) {
           key={index}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "200px" }}
           transition={{ delay: index * 0.2, duration: 0.6, ease: "easeOut" }}
           className="bg-white dark:bg-[#0f0f1f] border border-neutral-200 dark:border-[#272742] 
             rounded-2xl shadow-md relative overflow-hidden backdrop-blur-md"

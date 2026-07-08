@@ -57,7 +57,7 @@ export default function LicenseTypes() {
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "200px" }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="mx-auto max-w-6xl"
       >
@@ -70,7 +70,7 @@ export default function LicenseTypes() {
                 key={type.level}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "200px" }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
                 whileHover={{ y: -6 }}
                 className={`group relative overflow-hidden rounded-3xl border p-6 transition-all duration-300 ${

@@ -24,7 +24,7 @@ export default function SectionWrapper({ id = "", title, children }) {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "200px" }}
           className="mx-auto mb-12 max-w-3xl text-center"
         >
           {title}

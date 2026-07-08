@@ -64,7 +64,7 @@ export default function HowItWorks() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, margin: "200px" }}
                   transition={{ delay: idx * 0.15, duration: 0.5 }}
                   className="flex-1 relative bg-white rounded-lg border-2 border-zinc-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] p-5 text-center hover:border-[#22c55e]/30 hover:shadow-[0_8px_30px_rgb(31,122,77,0.12)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col"
                 >

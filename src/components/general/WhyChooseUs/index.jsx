@@ -73,7 +73,7 @@ export default function WhyChooseUs() {
                 key={idx}
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "200px" }}
                 transition={{ delay: idx * 0.1, duration: 0.4 }}
                 className="flex p-4 sm:p-6 items-center hover:bg-zinc-50/50 transition-colors group"
               >
