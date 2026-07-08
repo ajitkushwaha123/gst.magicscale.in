@@ -1,38 +1,15 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import posthog from "posthog-js";
 import * as Yup from "yup";
-import { Formik, Form, Field } from "formik";
-import { motion, AnimatePresence } from "framer-motion";
+import posthog from "posthog-js";
 import { toast } from "react-hot-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { Formik, Form, Field, useFormikContext } from "formik";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRegistration } from "@/hooks/useRegistration";
 import { useAppConfigStore } from "@/stores/app-config.store";
-import {
-  User,
-  Phone,
-  Loader2,
-  CheckCircle2,
-  Lock,
-  Mail,
-  MapPin,
-  Building2,
-  ChevronRight,
-  ChevronLeft,
-  UploadCloud,
-  FileCheck,
-  Store,
-  Truck,
-  ChefHat
-} from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { User, Phone, Loader2, CheckCircle2, Lock, Mail, MapPin, Building, Map, ChevronRight, ChevronLeft } from "lucide-react";
 
 const businessTypes = [
   { id: "food-cart", label: "Food Cart / Stall", image: "/assets/images/street-food-cart.webp" },
@@ -44,29 +21,60 @@ const businessTypes = [
 ];
 
 const validationSchemas = [
-  // Step 0: Business Type
   Yup.object({
     businessType: Yup.string().required("Please select a business type"),
   }),
-  // Step 1: Basic Info
+
   Yup.object({
     name: Yup.string().trim().required("Name is required"),
     phone: Yup.string()
       .matches(/^\d{10}$/, "Enter a valid 10-digit number")
       .required("WhatsApp number is required"),
   }),
-  // Step 2: Contact
+
   Yup.object({
     email: Yup.string().email("Invalid email address").required("Email is required"),
-    address: Yup.string().trim().required("Complete address is required"),
+    pincode: Yup.string().matches(/^\d{6}$/, "Valid 6-digit pincode required").required("Pincode is required"),
+    state: Yup.string().trim().required("State is required"),
+    city: Yup.string().trim().required("City is required"),
+    addressLine: Yup.string().trim().required("Flat/House/Street is required"),
   }),
-  // Step 3: Documents
+
   Yup.object({
     profilePicUrl: Yup.string().required("Profile picture is required"),
     aadharUrl: Yup.string().required("Aadhar card is required"),
     panUrl: Yup.string().required("PAN card is required"),
   }),
 ];
+
+const FormObserver = ({ currentStep }) => {
+  const { values } = useFormikContext();
+  useEffect(() => {
+    localStorage.setItem("fssai_form_data", JSON.stringify({ step: currentStep, values }));
+  }, [values, currentStep]);
+  return null;
+};
+
+const PincodeLookup = () => {
+  const { values, setFieldValue } = useFormikContext();
+  useEffect(() => {
+    if (values.pincode && values.pincode.length === 6) {
+      fetch(`https://api.postalpincode.in/pincode/${values.pincode}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data[0] && data[0].Status === "Success") {
+            const postOffice = data[0].PostOffice[0];
+            if (postOffice) {
+              setFieldValue("city", postOffice.District || postOffice.Region || "");
+              setFieldValue("state", postOffice.State || "");
+            }
+          }
+        })
+        .catch(err => console.error(err));
+    }
+  }, [values.pincode, setFieldValue]);
+  return null;
+};
 
 const FieldError = ({ touched, error }) => {
   if (!touched || !error) return null;
@@ -84,16 +92,26 @@ const FieldError = ({ touched, error }) => {
 export default function ReserveSeatDialog({ open, onOpenChange }) {
   const plan = useAppConfigStore((state) => state.plan);
   const { registration } = useRegistration();
-  const [currentStep, setCurrentStep] = useState(0);
+  const getSavedData = () => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("fssai_form_data");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {}
+      }
+    }
+    return null;
+  };
+
+  const savedData = getSavedData();
+
+  const [currentStep, setCurrentStep] = useState(savedData?.step || 0);
   const [direction, setDirection] = useState(1);
   const [isCapturingLead, setIsCapturingLead] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
-  useEffect(() => {
-    if (!open) {
-      setTimeout(() => setCurrentStep(0), 300);
-    }
-  }, [open]);
+  // Removed resetting currentStep to 0 when modal closes to allow resuming progress
 
   useEffect(() => {
     const handlePaytmOpened = () => {
@@ -124,7 +142,6 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
           }),
         });
 
-        // Fire Lead events properly
         posthog.capture("lead_captured", { plan_id: plan?._id });
         if (typeof window !== "undefined" && window.fbq) {
           window.fbq("track", "Lead", { content_name: "FSSAI Application" });
@@ -199,7 +216,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
   return (
     <Dialog open={open} onOpenChange={(val) => { if (!registration.isPending) onOpenChange(val); }}>
       <DialogContent className="z-[100] border-0 p-0 w-[95vw] max-w-[480px] bg-white rounded-[24px] shadow-2xl flex flex-col overflow-hidden max-h-[90vh]">
-        
+
         <div className="px-6 pt-8 pb-5 sm:px-8 bg-white border-b border-zinc-100 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] relative z-10">
           <DialogHeader>
             <DialogTitle className="text-left text-2xl font-extrabold text-zinc-900 tracking-tight">
@@ -219,23 +236,26 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
         <Formik
           initialValues={{
-            businessType: "",
-            name: "",
-            phone: "",
-            email: "",
-            address: "",
-            profilePicUrl: "",
-            aadharUrl: "",
-            panUrl: "",
+            businessType: savedData?.values?.businessType || "",
+            name: savedData?.values?.name || "",
+            phone: savedData?.values?.phone || "",
+            email: savedData?.values?.email || "",
+            pincode: savedData?.values?.pincode || "",
+            state: savedData?.values?.state || "",
+            city: savedData?.values?.city || "",
+            addressLine: savedData?.values?.addressLine || "",
+            profilePicUrl: savedData?.values?.profilePicUrl || "",
+            aadharUrl: savedData?.values?.aadharUrl || "",
+            panUrl: savedData?.values?.panUrl || "",
           }}
           validationSchema={validationSchemas[currentStep]}
           onSubmit={async (values) => {
             if (currentStep !== 3) return;
             if (!plan?._id) return;
-            
+
             try {
               setIsRedirecting(true);
-              
+
               // Fire Checkout events
               posthog.capture("checkout_initiated", { plan_id: plan._id, amount: plan.price });
               if (typeof window !== "undefined" && window.fbq) {
@@ -246,15 +266,16 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                 name: values.name.trim(),
                 phone: values.phone.trim(),
                 email: values.email.trim(),
-                address: values.address.trim(),
+                address: `${values.addressLine.trim()}, ${values.city.trim()}, ${values.state.trim()} - ${values.pincode}`,
                 businessName: values.businessType,
                 profilePicUrl: values.profilePicUrl,
                 aadharUrl: values.aadharUrl,
                 panUrl: values.panUrl,
                 planId: plan._id,
               });
-              
+
               toast.success("Details securely submitted! Redirecting to payment...");
+              localStorage.removeItem("fssai_form_data");
               // We intentionally do NOT close the modal here. We wait for the Paytm popup to open over it.
             } catch (error) {
               setIsRedirecting(false);
@@ -265,6 +286,8 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
         >
           {({ values, errors, touched, setFieldValue, handleChange, handleBlur, setTouched, validateForm }) => (
             <Form className="flex flex-col bg-white overflow-hidden">
+              <FormObserver currentStep={currentStep} />
+              <PincodeLookup />
               <div className="overflow-x-hidden overflow-y-auto px-6 py-6 sm:px-8 relative">
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
@@ -276,8 +299,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                     exit="exit"
                     className="space-y-6"
                   >
-                    
-                    {/* STEP 0: Business Type */}
+
                     {currentStep === 0 && (
                       <div className="space-y-6">
                         <div className="space-y-3">
@@ -290,11 +312,10 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                                   type="button"
                                   key={type.id}
                                   onClick={() => setFieldValue("businessType", type.id)}
-                                  className={`group relative flex flex-col items-center justify-center p-0 rounded-2xl border-2 transition-all overflow-hidden h-[110px] ${
-                                    isSelected 
-                                      ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]" 
-                                      : "border-zinc-200 bg-white hover:border-emerald-300"
-                                  }`}
+                                  className={`group relative flex flex-col items-center justify-center p-0 rounded-2xl border-2 transition-all overflow-hidden h-[110px] ${isSelected
+                                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                                    : "border-zinc-200 bg-white hover:border-emerald-300"
+                                    }`}
                                 >
                                   {isSelected && (
                                     <div className="absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center z-20 shadow-sm">
@@ -317,7 +338,6 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                       </div>
                     )}
 
-                    {/* STEP 1: Basic Info */}
                     {currentStep === 1 && (
                       <div className="space-y-6">
 
@@ -359,10 +379,9 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                       </div>
                     )}
 
-                    {/* STEP 2: Contact Info */}
                     {currentStep === 2 && (
-                      <div className="space-y-6">
-                        <div className="space-y-2">
+                      <div className="space-y-4">
+                        <div className="space-y-1.5">
                           <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Email Address</label>
                           <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -378,35 +397,83 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           <FieldError touched={touched.email} error={errors.email} />
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Complete Address</label>
+                        <div className="space-y-1.5">
+                          <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Pincode</label>
                           <div className="relative group">
-                            <div className="absolute top-3.5 left-0 pl-4 pointer-events-none">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                               <MapPin className="h-5 w-5 text-zinc-400 group-focus-within:text-emerald-500 transition-colors" />
                             </div>
+                            <Field
+                              name="pincode"
+                              maxLength={6}
+                              placeholder="e.g. 400001"
+                              onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, "");
+                                setFieldValue("pincode", val);
+                              }}
+                              className="w-full h-[52px] pl-12 pr-4 bg-zinc-50 hover:bg-zinc-100/50 border border-zinc-200 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl text-base font-medium transition-all outline-none"
+                            />
+                          </div>
+                          <FieldError touched={touched.pincode} error={errors.pincode} />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">City</label>
+                            <div className="relative group">
+                              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <Map className="h-5 w-5 text-zinc-400 group-focus-within:text-emerald-500 transition-colors" />
+                              </div>
+                              <Field
+                                name="city"
+                                placeholder="City"
+                                className="w-full h-[52px] pl-12 pr-4 bg-zinc-50 hover:bg-zinc-100/50 border border-zinc-200 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl text-base font-medium transition-all outline-none"
+                              />
+                            </div>
+                            <FieldError touched={touched.city} error={errors.city} />
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">State</label>
+                            <div className="relative group">
+                              <Field
+                                name="state"
+                                placeholder="State"
+                                className="w-full h-[52px] px-4 bg-zinc-50 hover:bg-zinc-100/50 border border-zinc-200 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl text-base font-medium transition-all outline-none"
+                              />
+                            </div>
+                            <FieldError touched={touched.state} error={errors.state} />
+                          </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Flat, House no., Building</label>
+                          <div className="relative group">
+                            <div className="absolute top-3.5 left-0 pl-4 pointer-events-none">
+                              <Building className="h-5 w-5 text-zinc-400 group-focus-within:text-emerald-500 transition-colors" />
+                            </div>
                             <textarea
-                              name="address"
-                              value={values.address}
+                              name="addressLine"
+                              value={values.addressLine}
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              placeholder="Flat, Building, Street, Area, City, Pincode"
-                              rows={4}
+                              placeholder="Flat, Building, Street, Area"
+                              rows={2}
                               className="w-full py-3.5 pl-12 pr-4 bg-zinc-50 hover:bg-zinc-100/50 border border-zinc-200 focus:bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-xl text-base font-medium transition-all outline-none resize-none"
                             />
                           </div>
-                          <FieldError touched={touched.address} error={errors.address} />
+                          <FieldError touched={touched.addressLine} error={errors.addressLine} />
                         </div>
                       </div>
                     )}
 
-                    {/* STEP 3: Documents */}
                     {currentStep === 3 && (
                       <div className="space-y-5">
                         <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex gap-3 mb-2">
                           <Lock className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
                           <p className="text-sm text-emerald-800 font-medium">Your documents are encrypted and only used for your official FSSAI registration.</p>
                         </div>
-                        
+
                         {[
                           { id: "profilePicUrl", label: "Applicant Passport Photo", desc: "Clear photo with white background", asset: "/assets/images/passport-photo.webp" },
                           { id: "aadharUrl", label: "Aadhar Card", desc: "Front & Back in a single image/PDF", asset: "/assets/images/aadhaar-card.webp" },
@@ -417,33 +484,33 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           const isPdf = fileData && (fileData.startsWith("data:application/pdf") || fileData.match(/\.pdf($|\?)/i));
 
                           return (
-                          <div key={doc.id} className="space-y-1.5">
-                            <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">{doc.label}</label>
-                            <p className="text-xs text-zinc-500 font-medium mb-2">{doc.desc}</p>
-                            <label className="relative flex items-center justify-between p-4 border-2 border-dashed border-zinc-200 rounded-xl hover:border-emerald-400 hover:bg-emerald-50/30 transition-all cursor-pointer group">
-                              <div className="flex items-center gap-3 overflow-hidden">
-                                {isImage ? (
-                                  <div className="w-12 h-12 rounded-lg overflow-hidden border border-zinc-200 shadow-sm flex-shrink-0">
-                                    <img src={fileData} alt={doc.label} className="w-full h-full object-cover" />
-                                  </div>
-                                ) : (
-                                  <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-zinc-50 border border-zinc-200 overflow-hidden group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-colors">
-                                    <img src={doc.asset} alt="icon" className="w-8 h-8 object-contain drop-shadow-sm" />
-                                  </div>
-                                )}
-                                <span className={`text-sm font-semibold truncate max-w-[200px] sm:max-w-[250px] ${fileData ? "text-emerald-700" : "text-zinc-600"}`}>
-                                  {fileData ? (isImage ? "Image Attached" : "Document Attached") : "Click to browse file..."}
-                                </span>
-                              </div>
-                              <input
-                                type="file"
-                                accept="image/*,application/pdf"
-                                className="hidden"
-                                onChange={(e) => handleFileUpload(e, doc.id, setFieldValue)}
-                              />
-                            </label>
-                            <FieldError touched={touched[doc.id]} error={errors[doc.id]} />
-                          </div>
+                            <div key={doc.id} className="space-y-1.5">
+                              <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">{doc.label}</label>
+                              <p className="text-xs text-zinc-500 font-medium mb-2">{doc.desc}</p>
+                              <label className="relative flex items-center justify-between p-4 border-2 border-dashed border-zinc-200 rounded-xl hover:border-emerald-400 hover:bg-emerald-50/30 transition-all cursor-pointer group">
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                  {isImage ? (
+                                    <div className="w-12 h-12 rounded-lg overflow-hidden border border-zinc-200 shadow-sm flex-shrink-0">
+                                      <img src={fileData} alt={doc.label} className="w-full h-full object-cover" />
+                                    </div>
+                                  ) : (
+                                    <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-zinc-50 border border-zinc-200 overflow-hidden group-hover:bg-emerald-100 group-hover:border-emerald-200 transition-colors">
+                                      <img src={doc.asset} alt="icon" className="w-8 h-8 object-contain drop-shadow-sm" />
+                                    </div>
+                                  )}
+                                  <span className={`text-sm font-semibold truncate max-w-[200px] sm:max-w-[250px] ${fileData ? "text-emerald-700" : "text-zinc-600"}`}>
+                                    {fileData ? (isImage ? "Image Attached" : "Document Attached") : "Click to browse file..."}
+                                  </span>
+                                </div>
+                                <input
+                                  type="file"
+                                  accept="image/*,application/pdf"
+                                  className="hidden"
+                                  onChange={(e) => handleFileUpload(e, doc.id, setFieldValue)}
+                                />
+                              </label>
+                              <FieldError touched={touched[doc.id]} error={errors[doc.id]} />
+                            </div>
                           );
                         })}
                       </div>
@@ -452,7 +519,6 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                 </AnimatePresence>
               </div>
 
-              {/* Footer Controls */}
               <div className="px-6 py-5 sm:px-8 bg-white border-t border-zinc-100 flex items-center gap-3">
                 {currentStep > 0 && (
                   <Button
@@ -465,7 +531,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                     <ChevronLeft className="w-6 h-6" />
                   </Button>
                 )}
-                
+
                 {currentStep < 3 ? (
                   <Button
                     type="button"
