@@ -506,7 +506,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                                 <input
                                   type="file"
                                   accept="image/*,application/pdf"
-                                  className="hidden"
+                                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                                   onChange={(e) => handleFileUpload(e, doc.id, setFieldValue)}
                                 />
                               </label>

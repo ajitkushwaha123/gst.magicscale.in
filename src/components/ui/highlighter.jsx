@@ -21,7 +21,6 @@ export function Highlighter({
     margin: "-10%",
   })
 
-  // If isView is false, always show. If isView is true, wait for inView
   const shouldShow = !isView || isInView
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export function Highlighter({
         if (annotation) {
           annotation.remove();
         }
-        
+
         annotation = annotate(element, {
           type: action,
           color,
@@ -46,20 +45,17 @@ export function Highlighter({
           padding,
           multiline,
         });
-        
+
         annotation.show();
       };
 
-      // Wait for fonts to fully load to prevent the left-shift offset bug
       document.fonts.ready.then(() => {
-        // Small delay to let framer-motion layouts settle
         setTimeout(() => {
           if (!isMounted) return;
           draw(true);
 
-          // Re-calculate bounding boxes silently on window resize or reflow
           resizeObserver = new ResizeObserver(() => {
-             draw(false);
+            draw(false);
           });
           resizeObserver.observe(element);
         }, 150);
