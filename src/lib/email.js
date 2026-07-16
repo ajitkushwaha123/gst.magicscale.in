@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import { PLANS } from "@/constants/plans";
+import dbConnect from "@/lib/db-connect";
+import { AppConfig } from "@/models/AppConfig";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -64,10 +66,21 @@ export async function sendPaymentSuccessEmails(lead, registration, paymentDetail
       </div>
     `;
 
-    // 2. Send Email to Admins
-    const adminEmails = process.env.NOTIFICATION_EMAIL 
-      ? [process.env.NOTIFICATION_EMAIL, "ajitkushwahacse@gmail.com"]
-      : ["mycodingprofiles@gmail.com", "ajitkushwahacse@gmail.com"];
+    // 2. Fetch Admin Emails from AppConfig DB
+    await dbConnect();
+    let adminEmails = ["mycodingprofiles@gmail.com"];
+
+    try {
+      const emailConfig = await AppConfig.findOne({ key: "adminEmails" });
+      if (emailConfig && Array.isArray(emailConfig.value) && emailConfig.value.length > 0) {
+        adminEmails = emailConfig.value;
+      } else {
+        // Seed the DB if the config doesn't exist yet
+        await AppConfig.create({ key: "adminEmails", value: adminEmails });
+      }
+    } catch (dbErr) {
+      console.error("Failed to fetch admin emails from AppConfig:", dbErr);
+    }
 
     const adminHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb; padding: 20px;">

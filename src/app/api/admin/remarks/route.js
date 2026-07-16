@@ -20,9 +20,9 @@ export async function POST(req) {
 
     let updatedDoc = null;
     if (type === "lead") {
-      updatedDoc = await Lead.findByIdAndUpdate(id, { remarks }, { new: true });
+      updatedDoc = await Lead.findByIdAndUpdate(id, { remarks }, { returnDocument: 'after' });
     } else if (type === "registration") {
-      updatedDoc = await Registration.findByIdAndUpdate(id, { remarks }, { new: true });
+      updatedDoc = await Registration.findByIdAndUpdate(id, { remarks }, { returnDocument: 'after' });
     } else {
       return NextResponse.json({ success: false, message: "Invalid type" }, { status: 400 });
     }
