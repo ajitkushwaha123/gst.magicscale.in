@@ -49,6 +49,7 @@ export async function POST(req) {
 
     const posthog = getPostHogClient();
 
+    if (status === "TXN_SUCCESS") {
       await Registration.updateOne({ orderId }, { $set: { paymentStatus: "SUCCESS" } });
 
       // Trigger emails in background
