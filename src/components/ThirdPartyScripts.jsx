@@ -5,7 +5,7 @@ import { useEffect } from "react";
 // Easily manage multiple tracking IDs here
 const CONFIG = {
   googleAnalyticsIds: ["G-XVLEDXG07G"], // You can add multiple GA IDs here in the future
-  metaPixelIds: ["1223249586587487"], // Add or remove Meta Pixel IDs here
+  metaPixelIds: ["1508937903891015"], // Add or remove Meta Pixel IDs here
 };
 
 // Initialize the window objects and stubs synchronously if in browser
@@ -47,11 +47,6 @@ export default function ThirdPartyScripts() {
       if (scriptsLoaded) return;
       scriptsLoaded = true;
 
-      // Remove event listeners once loaded
-      triggerEvents.forEach((event) => {
-        window.removeEventListener(event, loadScripts);
-      });
-
       // 1. Initialize Google Analytics dynamically
       if (CONFIG.googleAnalyticsIds.length > 0) {
         // Load the main gtag script using the first ID
@@ -67,21 +62,17 @@ export default function ThirdPartyScripts() {
         t.async = !0;
         t.src = 'https://connect.facebook.net/en_US/fbevents.js';
         const s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(t, s);
+        if (s && s.parentNode) {
+          s.parentNode.insertBefore(t, s);
+        } else {
+          document.head.appendChild(t);
+        }
       }
     };
 
-    const triggerEvents = ["mouseover", "keydown", "touchstart", "scroll"];
+    // Load scripts immediately to ensure perfect event tracking
+    loadScripts();
 
-    triggerEvents.forEach((event) => {
-      window.addEventListener(event, loadScripts, { passive: true });
-    });
-
-    return () => {
-      triggerEvents.forEach((event) => {
-        window.removeEventListener(event, loadScripts);
-      });
-    };
   }, []);
 
   if (CONFIG.metaPixelIds.length === 0) return null;
