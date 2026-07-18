@@ -372,6 +372,11 @@ function TableRow({ item, savingRemark, onSaveRemark, savingStatus, onSaveStatus
         <a href={`https://wa.me/91${item.phone?.replace(/\D/g, "")}?text=${encodeURIComponent("Hi sir apko food license banwana hai kya")}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 font-medium hover:underline mt-1 block">
           {item.phone}
         </a>
+        {item.email && (
+          <a href={`mailto:${item.email}`} className="text-zinc-500 hover:text-zinc-700 text-xs hover:underline mt-0.5 block truncate max-w-[180px]">
+            {item.email}
+          </a>
+        )}
         <button
           onClick={() => onWaTag(targetId, targetType, !item.waMessaged)}
           disabled={savingWaTag === targetId}
