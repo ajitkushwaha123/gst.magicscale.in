@@ -9,15 +9,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRegistration } from "@/hooks/useRegistration";
 import { useAppConfigStore } from "@/stores/app-config.store";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { User, Phone, Loader2, CheckCircle2, Lock, Mail, MapPin, Building, Map, ChevronRight, ChevronLeft } from "lucide-react";
+import { User, Phone, Loader2, CheckCircle2, Lock, Mail, MapPin, Building, Map, ChevronRight, ChevronLeft, ShoppingCart, Store, Laptop, Factory, Utensils, Briefcase } from "lucide-react";
 
 const businessTypes = [
-  { id: "food-cart", label: "Food Cart / Stall", image: "/assets/images/street-food-cart.webp" },
-  { id: "restaurant", label: "Restaurant / Hotel", image: "/assets/images/restaurant-hotel.webp" },
-  { id: "cloud-kitchen", label: "Cloud Kitchen", image: "/assets/images/cloud-kitchen.webp" },
-  { id: "grocery-retail", label: "Grocery / Retail", image: "/assets/images/grocery-retail.webp" },
-  { id: "manufacturing", label: "Manufacturing", image: "/assets/images/manufacturing.webp" },
-  { id: "other", label: "Other Business", image: "/assets/images/other-business.webp" },
+  { id: "ecommerce", label: "E-commerce Seller", icon: ShoppingCart },
+  { id: "retail", label: "Retailer / Shop", icon: Store },
+  { id: "freelance", label: "Freelancer / Service", icon: Laptop },
+  { id: "manufacturing", label: "Manufacturing", icon: Factory },
+  { id: "food", label: "Food Business", icon: Utensils },
+  { id: "other", label: "Other Business", icon: Briefcase },
 ];
 
 const validationSchemas = [
@@ -30,10 +30,10 @@ const validationSchemas = [
     phone: Yup.string()
       .matches(/^\d{10}$/, "Enter a valid 10-digit number")
       .required("WhatsApp number is required"),
+    email: Yup.string().email("Invalid email address").required("Email is required"),
   }),
 
   Yup.object({
-    email: Yup.string().email("Invalid email address").required("Email is required"),
     pincode: Yup.string().matches(/^\d{6}$/, "Valid 6-digit pincode required").required("Pincode is required"),
     state: Yup.string().trim().required("State is required"),
     city: Yup.string().trim().required("City is required"),
@@ -50,7 +50,7 @@ const validationSchemas = [
 const FormObserver = ({ currentStep }) => {
   const { values } = useFormikContext();
   useEffect(() => {
-    localStorage.setItem("fssai_form_data", JSON.stringify({ step: currentStep, values }));
+    localStorage.setItem("gst_form_data", JSON.stringify({ step: currentStep, values }));
   }, [values, currentStep]);
   return null;
 };
@@ -94,7 +94,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
   const { registration } = useRegistration();
   const getSavedData = () => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("fssai_form_data");
+      const saved = localStorage.getItem("gst_form_data");
       if (saved) {
         try {
           return JSON.parse(saved);
@@ -143,8 +143,6 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
       }
     }
   }, [open]);
-
-  // Removed resetting currentStep to 0 when modal closes to allow resuming progress
 
   useEffect(() => {
     const handlePaytmOpened = () => {
@@ -259,14 +257,14 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
           <DialogHeader>
             <DialogTitle className="text-left text-2xl font-extrabold text-zinc-900 tracking-tight">
               {currentStep === 0 && "Let's get started"}
-              {currentStep === 1 && "Personal Details"}
-              {currentStep === 2 && "Contact Information"}
+              {currentStep === 1 && "Contact Details"}
+              {currentStep === 2 && "Business Location"}
               {currentStep === 3 && "Required Documents"}
             </DialogTitle>
             <DialogDescription className="text-left text-zinc-500 text-sm mt-1.5 font-medium leading-relaxed">
-              {currentStep === 0 && "Select your business type."}
-              {currentStep === 1 && "Enter your name and WhatsApp number."}
-              {currentStep === 2 && "Where should we send your official GST certificate?"}
+              {currentStep === 0 && "Select your business type for GST Registration."}
+              {currentStep === 1 && "Enter your contact details so we can reach you."}
+              {currentStep === 2 && "Where will your business operate from?"}
               {currentStep === 3 && "Upload clear photos of your documents to verify identity."}
             </DialogDescription>
           </DialogHeader>
@@ -292,7 +290,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                   currency: "INR",
                   content_name: "GST Registration Advance",
                   content_type: "product",
-                  content_ids: [plan._id || "fssai_plan"],
+                  content_ids: [plan._id || "gst_plan"],
                   num_items: 1
                 });
               }
@@ -310,8 +308,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
               });
 
               toast.success("Details securely submitted! Redirecting to payment...");
-              localStorage.removeItem("fssai_form_data");
-              // We intentionally do NOT close the modal here. We wait for the Paytm popup to open over it.
+              localStorage.removeItem("gst_form_data");
             } catch (error) {
               setIsRedirecting(false);
               console.error("Registration failed:", error);
@@ -342,26 +339,25 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           <div className="grid grid-cols-2 gap-3">
                             {businessTypes.map((type) => {
                               const isSelected = values.businessType === type.id;
+                              const Icon = type.icon;
                               return (
                                 <button
                                   type="button"
                                   key={type.id}
                                   onClick={() => setFieldValue("businessType", type.id)}
-                                  className={`group relative flex flex-col items-center justify-center p-0 rounded-2xl border-2 transition-all overflow-hidden h-[110px] ${isSelected
-                                    ? "border-emerald-500 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
-                                    : "border-zinc-200 bg-white hover:border-emerald-300"
-                                    }`}
+                                  className={`group relative flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all h-[110px] ${
+                                    isSelected
+                                      ? "border-emerald-500 bg-emerald-50 shadow-[0_0_0_2px_rgba(16,185,129,0.2)]"
+                                      : "border-zinc-200 bg-white hover:border-emerald-300 hover:bg-zinc-50"
+                                  }`}
                                 >
                                   {isSelected && (
                                     <div className="absolute top-2 right-2 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center z-20 shadow-sm">
                                       <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                                     </div>
                                   )}
-                                  <div className="absolute inset-0 w-full h-full z-0">
-                                    <img src={type.image} alt={type.label} className="w-full h-full object-cover" />
-                                    <div className={`absolute inset-0 transition-colors bg-gradient-to-t from-black/80 via-black/20 to-transparent ${isSelected ? "bg-emerald-900/60" : "group-hover:bg-black/10"}`} />
-                                  </div>
-                                  <span className={`absolute bottom-2 left-0 w-full z-10 text-[12px] font-bold text-white text-center px-1 drop-shadow-lg`}>
+                                  <Icon className={`w-8 h-8 mb-2 transition-colors ${isSelected ? "text-emerald-600" : "text-zinc-400 group-hover:text-emerald-500"}`} />
+                                  <span className={`text-[13px] font-bold text-center px-1 ${isSelected ? "text-emerald-900" : "text-zinc-700"}`}>
                                     {type.label}
                                   </span>
                                 </button>
@@ -375,7 +371,6 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
                     {currentStep === 1 && (
                       <div className="space-y-6">
-
                         <div className="space-y-2">
                           <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Full Name</label>
                           <div className="relative group">
@@ -411,12 +406,8 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           </div>
                           <FieldError touched={touched.phone} error={errors.phone} />
                         </div>
-                      </div>
-                    )}
 
-                    {currentStep === 2 && (
-                      <div className="space-y-4">
-                        <div className="space-y-1.5">
+                        <div className="space-y-2">
                           <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Email Address</label>
                           <div className="relative group">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -431,7 +422,11 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
                           </div>
                           <FieldError touched={touched.email} error={errors.email} />
                         </div>
+                      </div>
+                    )}
 
+                    {currentStep === 2 && (
+                      <div className="space-y-4">
                         <div className="space-y-1.5">
                           <label className="text-[13px] font-bold tracking-wide text-zinc-800 uppercase">Pincode</label>
                           <div className="relative group">
@@ -511,7 +506,7 @@ export default function ReserveSeatDialog({ open, onOpenChange }) {
 
                         {[
                           { id: "profilePicUrl", label: "Applicant Passport Photo", desc: "Clear photo with white background", asset: "/assets/images/passport-photo.webp" },
-                          { id: "aadharUrl", label: "Aadhar Card", desc: "Front & Back in a single image/PDF", asset: "/assets/images/aadhaar-card.webp" },
+                          { id: "aadharUrl", label: "Aadhaar Card", desc: "Front & Back in a single image/PDF", asset: "/assets/images/aadhaar-card.webp" },
                           { id: "panUrl", label: "PAN Card", desc: "Clear image of your PAN card", asset: "/assets/images/pan-card.webp" },
                         ].map((doc) => {
                           const fileData = values[doc.id];

@@ -4,15 +4,14 @@ import { Headset, ShieldCheck, Trash2 } from "lucide-react";
 export const metadata = {
   title: "Shipping & Digital Delivery Policy | MagicScale",
   description:
-    "Learn how MagicScale delivers your FSSAI registration certificates, compliance documents, and consultation services.",
+    "Learn how MagicScale delivers your GST Registration certificate, GSTIN, ARN, and all related documents digitally.",
   keywords: [
     "MagicScale",
     "Digital Delivery",
-    "Service Access",
-    "FSSAI Certificate Delivery",
-    "consultation",
-    "License Delivery",
-    "FSSAI Licensing Service",
+    "GST Certificate Delivery",
+    "GSTIN Delivery",
+    "GST Registration Service",
+    "ARN Number",
   ],
   robots: "index, follow",
 };
@@ -21,74 +20,79 @@ const cardData = [
   {
     title: "100% Digital Delivery",
     description:
-      "All FSSAI registration services and consultations are delivered online.",
+      "All GST registration services are delivered entirely online — no physical shipping.",
     icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        MagicScale provides FSSAI registration services entirely through
-        digital channels. We do not sell or ship any physical products. <br />{" "}
+        MagicScale provides GST Registration services entirely through digital
+        channels. We do not sell or ship any physical products. <br />{" "}
         <br />
         Our offerings include:{" "}
         <ul className="list-disc pl-5 mt-2">
           {" "}
-          <li>FSSAI registration processing and submission</li>{" "}
-          <li>Digital delivery of your official FSSAI Certificate</li>{" "}
-          <li>Compliance consultation sessions (via call/video)</li>{" "}
-          <li>Digital hygiene templates and business resources</li>{" "}
-          <li>Application tracking and updates</li>{" "}
+          <li>GST application filing and submission on the Govt. portal</li>{" "}
+          <li>ARN (Application Reference Number) delivery via WhatsApp/email</li>{" "}
+          <li>Digital delivery of your official GSTIN Certificate</li>{" "}
+          <li>Aadhaar OTP assistance for e-signing</li>{" "}
+          <li>Application tracking and status updates</li>{" "}
         </ul>{" "}
         <br />
-        No physical shipping, courier services, or logistics are involved. You will 
-        receive your final certificate directly via email or WhatsApp once approved 
-        by the government.
+        No physical shipping, courier services, or logistics are involved. You
+        will receive your GSTIN Certificate directly via email or WhatsApp
+        once issued by the government.
       </>
     ),
   },
   {
-    title: "Application Tracking & Timelines",
-    description: "Updates and certificates are delivered electronically.",
+    title: "ARN & GSTIN Delivery Timeline",
+    description: "ARN is issued immediately; GSTIN is typically within 48 hours.",
     icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        After successful payment and submission of your KYC documents, you will 
-        receive an application reference number or submission proof via email. <br /> <br />
-        Delivery timelines for the final FSSAI license depend entirely on the 
-        government department's processing speed. Most standard registrations are 
-        processed within 7 to 30 working days. <br /> <br />
-        Once approved by the authorities, the soft copy of your FSSAI certificate 
-        will be delivered to your registered email address immediately.
+        After successful payment and submission of your documents (Aadhaar,
+        PAN, Bank Proof, Photo), your GST application will be submitted on the
+        government portal. <br /> <br />
+        <strong>ARN (Application Reference Number)</strong> is generated
+        immediately upon application submission and shared with you. <br />{" "}
+        <br />
+        <strong>GSTIN (GST Identification Number)</strong> is typically issued
+        within 48 hours of application submission, subject to Aadhaar OTP
+        verification being completed and government processing. Delays due to
+        government portal issues or incomplete documents are outside our
+        control.
       </>
     ),
   },
   {
     title: "Communication & Access Responsibility",
     description:
-      "Applicants are responsible for providing accurate contact details.",
+      "Applicants are responsible for providing accurate contact details and completing Aadhaar OTP.",
     icon: <Trash2 className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        Applicants are responsible for providing an accurate email address and 
-        phone number during registration to ensure smooth delivery of updates 
-        and the final certificate. <br /> <br />
-        Failure to provide necessary documents for processing, or missing a 
-        scheduled compliance consultation call, does not constitute a delivery 
-        failure on our part.
+        Applicants are responsible for providing an accurate email address,
+        WhatsApp number, and Aadhaar-linked mobile number during registration
+        to ensure smooth delivery of updates and the final GSTIN certificate.{" "}
+        <br /> <br />
+        Delays caused by non-availability for Aadhaar OTP verification,
+        failure to submit required documents on time, or providing incorrect
+        contact details do not constitute a delivery failure on our part.
       </>
     ),
   },
 ];
 
 const contactData = {
-  title: "Need Help With Your Application?",
+  title: "Need Help With Your GST Application?",
   description:
-    "Our support team is available to assist with document delivery questions.",
+    "Our support team is available to assist with document delivery and GSTIN status questions.",
   content: (
     <div>
       {" "}
       <p className="mb-4">
-        If you have submitted all your documents but have not received an 
-        application update, or if your license has been approved but you haven't 
-        received the digital copy, please contact our support team.{" "}
+        If you have submitted all your documents but have not received your ARN
+        or GSTIN, or if your registration has been approved but you haven&apos;t
+        received the digital certificate, please contact our support team.{" "}
       </p>
       <p>
         Support Email:{" "}
@@ -104,7 +108,7 @@ const contactData = {
         <br />
         New Delhi, India
         <br />
-        FSSAI Registration & Compliance Services
+        GST Registration &amp; Compliance Services
       </p>
     </div>
   ),
@@ -120,8 +124,8 @@ const page = () => {
           Policy{" "}
         </div>
       }
-      description="Learn how application updates, consultation programs, and final FSSAI certificates are delivered by MagicScale."
-      ctaDescription="All MagicScale services are delivered digitally. After government approval, your official FSSAI certificate will be sent directly to your registered email address."
+      description="Learn how your ARN, GSTIN, and GST Certificate are delivered by MagicScale after your GST Registration application is submitted."
+      ctaDescription="All MagicScale services are delivered digitally. After government approval, your official GST Certificate (GSTIN) will be sent directly to your registered WhatsApp and email address."
       ctaLink="mailto:support@magicscale.in"
       ctaButton={
         <span className="flex items-center gap-2">

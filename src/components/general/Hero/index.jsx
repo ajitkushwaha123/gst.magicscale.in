@@ -1,10 +1,16 @@
-import { cn } from "@/lib/utils";
-import { Highlighter } from "@/components/ui/highlighter";
+"use client";
+
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
+import { cn } from "@/lib/utils";
+import PayButton from "../Payment/PayButton";
 
 export const Hero = () => {
   return (
-    <div className="relative w-full px-4 sm:px-6 lg:px-8 text-center pt-20 md:pt-32 pb-8 md:pb-12 overflow-hidden flex flex-col items-center">
+    <div className="relative w-full px-4 sm:px-6 lg:px-8 text-center pt-20 md:pt-32 pb-0 overflow-hidden flex flex-col items-center">
+      {/* Background grid */}
       <GridPattern
         width={40}
         height={40}
@@ -12,119 +18,73 @@ export const Hero = () => {
         y={-1}
         strokeDasharray={"4 2"}
         className={cn(
-          "absolute inset-0 h-full w-full stroke-[#22c55e]/30 fill-[#22c55e]/30 dark:stroke-emerald-400/30 dark:fill-emerald-400/30 z-0",
-          "[mask-image:linear-gradient(to_bottom,white,transparent_90%)]",
+          "absolute inset-0 h-full w-full stroke-gray-200 fill-transparent dark:stroke-gray-800 z-0",
+          "[mask-image:linear-gradient(to_bottom,white_40%,transparent_85%)]"
         )}
       />
-      <h1
-        className="relative z-10 w-full mx-auto pb-4 animate-in fade-in slide-in-from-top-4 duration-700"
-      >
-        <div className="flex justify-center mb-6">
-          <span className="inline-flex items-center rounded-full bg-emerald-100/80 dark:bg-emerald-900/30 px-4 py-1.5 text-sm font-medium text-emerald-800 dark:text-emerald-300 ring-1 ring-inset ring-[#22c55e]/20 shadow-sm">
-            🚀 Trusted by 10,000+ Businesses Across India
-          </span>
-        </div>
 
-        <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[1.2] md:leading-[1.1] text-gray-900 dark:text-white">
-          Get Your GST Number{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-[#22c55e] drop-shadow-sm">
-            in 48 Hours
-          </span>
-          <br />
-          <span className="mt-2 md:mt-4 flex flex-wrap justify-center items-center gap-x-4 gap-y-2">
-            <span>At Just</span>
-            <span className="inline-block -rotate-2 transform transition-transform hover:rotate-0 duration-300">
-              <Highlighter action="highlight" color="#22c55e">
-                <span className="text-white relative z-10 px-4 py-1 rounded-md">
-                  ₹1,499
-                </span>
-              </Highlighter>
-            </span>
-          </span>
-        </div>
-      </h1>
-
-      <p
-        className="relative z-10 mt-6 text-sm md:text-lg lg:text-xl text-gray-500 dark:text-gray-400 max-w-3xl font-normal leading-relaxed mx-auto px-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both"
-      >
-        Start selling on{" "}
-        <span className="text-orange-500 font-semibold">Amazon</span>,{" "}
-        <span className="text-emerald-500 font-semibold">Flipkart</span> &amp; grow your business with a valid GSTIN.
-        100% online, government-approved process.
-      </p>
-
-      <div className="relative z-10 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-        <div className="inline-flex flex-col sm:flex-row items-center justify-center gap-3 bg-[#e8f2ec] dark:bg-emerald-900/20 px-6 py-3 rounded-2xl border border-emerald-100 dark:border-emerald-800/30">
-          <span className="text-green-700 dark:text-emerald-400 font-semibold text-lg flex items-center gap-2">
-            <span className="text-2xl font-black">₹300</span> Advance
-          </span>
-          <span className="hidden sm:block text-emerald-300">|</span>
-          <span className="text-[#22c55e] dark:text-emerald-500 font-medium text-sm sm:text-base">
-            Pay the rest after GSTIN is Issued
-          </span>
-        </div>
-      </div>
-
-      <div
-        className="relative hidden z-10 md:flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 mb-12 text-sm font-medium text-gray-500 dark:text-gray-400 animate-in fade-in duration-700 delay-500 fill-mode-both"
-      >
-        <span className="flex items-center gap-1.5"><span className="text-emerald-500 bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-0.5">✓</span> 100% Online Process</span>
-        <span className="flex items-center gap-1.5"><span className="text-emerald-500 bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-0.5">✓</span> Govt Approved</span>
-        <span className="flex items-center gap-1.5"><span className="text-emerald-500 bg-emerald-100 dark:bg-emerald-900/40 rounded-full p-0.5">✓</span> 48hr Turnaround</span>
-      </div>
-
-      <div className="w-full max-w-6xl mx-auto animate-in fade-in zoom-in-95 duration-700 delay-700 ">
-        <div className="group relative overflow-hidden rounded-2xl md:rounded-[24px] border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-black shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] p-2 sm:p-4">
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-            <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
-            <div className="absolute -bottom-32 -left-32 h-64 w-64 rounded-full bg-emerald-500/10 blur-3xl" />
+      <div className="relative z-10 flex w-full flex-col items-center text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-5 flex flex-col items-center gap-2"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-white/80 px-3 py-1 text-[11px] font-medium text-emerald-700 shadow-sm backdrop-blur-sm dark:border-emerald-400/50 dark:bg-emerald-500/10 dark:text-emerald-200">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            <span>CA‑backed GST Registration • PAN India</span>
           </div>
+        </motion.div>
 
-          <div className="relative z-10 overflow-hidden rounded-xl md:rounded-[16px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex items-center justify-center p-8 md:p-12">
-            {/* GST Certificate Visual */}
-            <div className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border-2 border-emerald-100 overflow-hidden">
-              {/* Header */}
-              <div className="bg-gradient-to-r from-green-700 to-green-700 px-8 py-6 text-center">
-                <div className="text-white text-xs font-bold tracking-widest uppercase mb-1 opacity-80">Government of India</div>
-                <div className="text-white text-2xl font-black tracking-tight">GST Registration Certificate</div>
-                <div className="text-emerald-200 text-sm mt-1">Goods and Services Tax</div>
-              </div>
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-balance text-4xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white sm:text-5xl md:text-6xl"
+        >
+          Get Your GST{" "}
+          <span className="bg-gradient-to-r from-emerald-500 to-green-600 bg-clip-text text-transparent">
+            Approved in 3 Days
+          </span>
+          <span className="bg-gradient-to-r from-[#FF8C00] via-[#138808] to-[#0F4BA0] bg-clip-text text-transparent">
+            <br />
+            Starting at just <span className="font-black">₹1,499</span>
+          </span>
+        </motion.h1>
 
-              {/* Body */}
-              <div className="p-8">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-xs text-zinc-400 uppercase tracking-widest font-bold mb-1">GSTIN</div>
-                    <div className="text-green-700 font-black text-lg tracking-widest">27AABCU9603R1ZX</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-zinc-400 uppercase tracking-widest font-bold mb-1">Registration Type</div>
-                    <div className="text-zinc-800 font-bold">Regular Taxpayer</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-zinc-400 uppercase tracking-widest font-bold mb-1">Business Name</div>
-                    <div className="text-zinc-800 font-bold">Your Business Pvt. Ltd.</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-zinc-400 uppercase tracking-widest font-bold mb-1">Date of Registration</div>
-                    <div className="text-zinc-800 font-bold">Within 48 Hours ⚡</div>
-                  </div>
-                </div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mx-auto mt-4 max-w-2xl text-pretty text-sm text-gray-700 dark:text-gray-300 md:mt-5 md:text-lg"
+        >
+          Official‑style experience without the headache. A dedicated GST team
+          handles eligibility, documents and{" "}
+          <span className="font-semibold text-emerald-700 dark:text-emerald-300">
+            end‑to‑end filing on the GST portal
+          </span>{" "}
+          so you can focus on your business.
+        </motion.p>
 
-                <div className="mt-6 pt-6 border-t border-zinc-100 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-block w-3 h-3 rounded-full bg-green-500 shadow-lg shadow-green-300 animate-pulse"></span>
-                    <span className="text-green-600 font-bold text-sm">Certificate Active</span>
-                  </div>
-                  <div className="bg-[#e8f2ec] border border-emerald-200 rounded-lg px-4 py-2">
-                    <span className="text-green-700 font-black text-sm">✓ Govt. Verified</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.4 }}
+          className="mt-8 flex flex-wrap justify-center gap-4 md:mt-10"
+        >
+          <PayButton />
+        </motion.div>
       </div>
+
+      {/* Image replaced instead of video */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, delay: 0.6 }}
+        className="relative z-10 w-full my-12 max-h-[70vh] overflow-hidden rounded-xl md:rounded-[16px] border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex items-start justify-center p-8 md:p-12"
+      >
+        <img src={"/assets/gst-hero.png"} className="w-full h-auto max-w-4xl" alt="GST Registration" />
+      </motion.div>
     </div>
   );
 };

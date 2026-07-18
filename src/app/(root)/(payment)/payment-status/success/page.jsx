@@ -67,9 +67,9 @@ function SuccessPageContent() {
         window.fbq("track", "Purchase", {
           value: purchaseValue,
           currency: "INR",
-          content_name: "FSSAI License Registration",
+          content_name: "GST Registration",
           content_type: "product",
-          content_ids: [reg.planId || registrationDetails?.plan?._id || "fssai_plan"],
+          content_ids: [reg.planId || registrationDetails?.plan?._id || "gst_plan"],
           order_id: reg.orderId
         });
       }
@@ -93,7 +93,7 @@ function SuccessPageContent() {
   const sessionDetails = {
     orderId: registration?.orderId || "N/A",
     amount: registration?.amount || "999",
-    serviceName: "FSSAI License Registration",
+    serviceName: "GST Registration",
     whatsappSupportLink: plan?.whatsappSupportLink || "https://wa.me/918826073117",
   };
 
@@ -121,7 +121,7 @@ function SuccessPageContent() {
               </h1>
 
               <p className="text-base text-slate-600">
-                Thank you for choosing MagicScale! We have received your payment and FSSAI License application details successfully.
+                Thank you for choosing MagicScale! We have received your payment and GST Registration application details successfully.
               </p>
 
               <div className="hidden md:block border-t border-slate-200/80 pt-6">
@@ -131,7 +131,7 @@ function SuccessPageContent() {
                 <div className="flex items-start gap-2.5 text-xs text-slate-500 leading-relaxed">
                   <Clock className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
                   <span>
-                    Our experts are reviewing your documents. Your FSSAI Registration Certificate will be generated and sent to you via WhatsApp & Email within 24 hours.
+                    Our experts are reviewing your documents. Your GST Registration Certificate (GSTIN) will be generated and sent to you via WhatsApp & Email.
                   </span>
                 </div>
               </div>
@@ -191,7 +191,7 @@ function SuccessPageContent() {
                       Important Notice
                     </div>
                     <p className="text-[11px] text-blue-700/90 mt-1 font-medium leading-normal">
-                      If any further documents are required (like NOC or modified layout), our team will reach out directly on your WhatsApp number.
+                      If any further documents are required (like NOC or rent agreement), our team will reach out directly on your WhatsApp number.
                     </p>
                   </div>
 

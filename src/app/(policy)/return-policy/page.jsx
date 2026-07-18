@@ -4,14 +4,13 @@ import { Headset, ShieldCheck, Trash2 } from "lucide-react";
 export const metadata = {
   title: "Service Delivery & Cancellation Policy | MagicScale",
   description:
-    "Learn about service delivery timelines, application processing, cancellations, and refund policies for MagicScale FSSAI registration services.",
+    "Learn about service delivery timelines, application processing, cancellations, and refund policies for MagicScale GST Registration services.",
   keywords: [
     "MagicScale",
     "Refund Policy",
     "Cancellation Policy",
-    "Service Delivery",
-    "FSSAI Processing",
-    "FSSAI Licensing",
+    "GST Registration Service",
+    "GSTIN Processing",
     "No Refund Policy",
   ],
   robots: "index, follow",
@@ -20,35 +19,40 @@ export const metadata = {
 const cardData = [
   {
     title: "Service Delivery & Timelines",
-    description: "Application processing times vary based on government authorities.",
+    description: "GST application processing begins immediately after payment and document submission.",
     icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        MagicScale provides FSSAI registration services, compliance consultation, 
-        and application processing. <br /> <br />
-        Service delivery begins immediately upon successful payment and submission 
-        of all required KYC documents by the applicant. Our team will review and 
-        submit your application to the FSSAI portal. <br /> <br />
-        Please note that the final issuance of the license depends entirely on 
-        the FSSAI government processing timelines. We do not guarantee a specific 
-        number of days for license approval, as delays may occur at the government level.
+        MagicScale provides GST Registration filing, ARN tracking, and GSTIN
+        delivery services. <br /> <br />
+        Service delivery begins immediately upon successful payment and
+        submission of all required documents (Aadhaar, PAN, bank proof,
+        photograph). Our team will review and submit your application to the
+        GST portal. <br /> <br />
+        <strong>ARN (Application Reference Number)</strong> is typically issued
+        within a few hours of application submission. <strong>GSTIN</strong>{" "}
+        is issued within 48 hours, subject to Aadhaar OTP verification and
+        government processing. We do not guarantee a specific timeline for
+        GSTIN issuance, as delays at the government level are outside our
+        control.
       </>
     ),
   },
   {
     title: "Cancellation & Document Policy",
-    description: "Please ensure you have valid KYC documents before purchasing.",
+    description: "Please ensure you have valid Aadhaar, PAN, and business documents before purchasing.",
     icon: <Trash2 className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        Applicants are responsible for providing authentic and complete KYC 
-        and business documents required for processing. <br /> <br />
-        Failure to provide necessary documents, or providing falsified documents, 
-        does not qualify for cancellation, refund, credit, or transfer.{" "}
-        <br /> <br />
-        If your application is rejected by the government due to discrepancies 
-        in your provided documents, the service is considered fulfilled, and no 
-        refunds will be issued.
+        Applicants are responsible for providing authentic and complete
+        documents required for GST Registration processing. <br /> <br />
+        Failure to provide necessary documents (Aadhaar, PAN, bank statement,
+        photograph), non-availability for Aadhaar OTP verification, or
+        providing falsified documents does not qualify for cancellation,
+        refund, credit, or transfer. <br /> <br />
+        If your GST application is rejected by the government due to
+        discrepancies in the documents you provided, the service is considered
+        fulfilled and no refunds will be issued.
       </>
     ),
   },
@@ -58,16 +62,16 @@ const cardData = [
     icon: <ShieldCheck className="w-6 h-6 text-green-500" />,
     content: (
       <>
-        All purchases made through MagicScale are final and non-refundable 
-        once the application processing has begun. <br /> <br />
+        All purchases made through MagicScale are final and non-refundable
+        once the GST application processing has begun. <br /> <br />
         Refunds will not be provided because:{" "}
         <ul className="list-disc pl-5 mt-2">
           {" "}
-          <li>You changed your mind after purchase.</li>{" "}
-          <li>You failed to provide required documents.</li>{" "}
+          <li>You changed your mind after payment.</li>{" "}
+          <li>You failed to provide required documents or Aadhaar OTP.</li>{" "}
           <li>Your application was delayed by government authorities.</li>{" "}
-          <li>Your application was rejected by the FSSAI department.</li>{" "}
-          <li>You decided not to launch your food business.</li>{" "}
+          <li>Your GST application was rejected by the department.</li>{" "}
+          <li>You decided not to proceed with your business registration.</li>{" "}
         </ul>{" "}
         <br />
         Refunds may only be considered in exceptional situations where:{" "}
@@ -77,7 +81,7 @@ const cardData = [
           <li>A verified technical billing error occurred on our platform.</li>{" "}
         </ul>{" "}
         <br />
-        Any approved refund remains solely at the discretion of MagicScale 
+        Any approved refund remains solely at the discretion of MagicScale
         after reviewing the circumstances.
       </>
     ),
@@ -85,16 +89,16 @@ const cardData = [
 ];
 
 const contactData = {
-  title: "Questions About Processing or Access?",
+  title: "Questions About Processing or Billing?",
   description:
     "Contact our team if you experience a billing issue or processing problem.",
   content: (
     <div>
       {" "}
       <p className="mb-4">
-        If you believe a payment issue occurred, or experienced a service delivery 
-        problem caused directly by our technical systems, please contact our 
-        support team with your transaction information.{" "}
+        If you believe a payment issue occurred, or experienced a service
+        delivery problem caused directly by our technical systems, please
+        contact our support team with your transaction information.{" "}
       </p>
       <p>
         Support Email:{" "}
@@ -110,7 +114,7 @@ const contactData = {
         <br />
         New Delhi, India
         <br />
-        FSSAI Registration & Compliance Services
+        GST Registration &amp; Compliance Services
       </p>
     </div>
   ),
@@ -122,12 +126,12 @@ const page = () => {
       title="Delivery & Cancellation Policy"
       heading={
         <div>
-          Delivery, Cancellation <br className="hidden sm:block" />& Refund
+          Delivery, Cancellation <br className="hidden sm:block" />&amp; Refund
           Policy{" "}
         </div>
       }
-      description="Please review our policies regarding service delivery, document processing, cancellations, and refunds before making a purchase."
-      ctaDescription="All MagicScale application processing services begin immediately upon document submission. Purchases are final and refunds are only considered in rare situations where a billing error is caused by our systems."
+      description="Please review our policies regarding service delivery, document processing, cancellations, and refunds before making a purchase for GST Registration."
+      ctaDescription="All MagicScale GST application processing services begin immediately upon document submission. Purchases are final and refunds are only considered in rare situations where a billing error is caused by our systems."
       ctaLink="mailto:support@magicscale.in"
       ctaButton={
         <span className="flex items-center gap-2">
