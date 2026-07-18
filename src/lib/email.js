@@ -145,9 +145,9 @@ export async function sendPaymentSuccessEmails(lead, registration, paymentDetail
             <!-- Documents -->
             <h3 style="color: #0f172a; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 16px;">Uploaded Documents</h3>
             <div style="margin-bottom: 32px;">
-              ${registration.profilePicUrl ? \`<a href="\${registration.profilePicUrl}" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">🖼️ Photo</a>\` : ''}
-              ${registration.aadharUrl ? \`<a href="\${registration.aadharUrl}" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">📄 Aadhar</a>\` : ''}
-              ${registration.panUrl ? \`<a href="\${registration.panUrl}" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">💳 PAN</a>\` : ''}
+              ${registration.profilePicUrl ? '<a href="' + registration.profilePicUrl + '" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">🖼️ Photo</a>' : ''}
+              ${registration.aadharUrl ? '<a href="' + registration.aadharUrl + '" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">📄 Aadhar</a>' : ''}
+              ${registration.panUrl ? '<a href="' + registration.panUrl + '" style="display: inline-block; background-color: #eff6ff; color: #2563eb; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #bfdbfe; margin: 0 8px 8px 0;">💳 PAN</a>' : ''}
               ${(!registration.profilePicUrl && !registration.aadharUrl && !registration.panUrl) ? '<p style="color: #94a3b8; font-style: italic; font-size: 14px; margin: 0;">No documents uploaded.</p>' : ''}
             </div>
 
