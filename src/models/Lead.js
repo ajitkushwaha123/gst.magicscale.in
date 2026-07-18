@@ -29,6 +29,10 @@ const leadSchema = new mongoose.Schema(
       type: String,
       enum: ["NEW", "CALLBACK", "CALL_DONE", "CONVERTED", "NOT_INTERESTED"],
       default: "NEW"
+    },
+    waMessaged: {
+      type: Boolean,
+      default: false
     }
   },
   {

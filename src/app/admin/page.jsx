@@ -12,6 +12,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [savingRemark, setSavingRemark] = useState(null);
   const [savingStatus, setSavingStatus] = useState(null);
+  const [savingWaTag, setSavingWaTag] = useState(null);
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,6 +110,36 @@ export default function AdminDashboard() {
       toast.error("An error occurred");
     } finally {
       setSavingStatus(null);
+    }
+  };
+
+  const handleWaTag = async (id, type, newVal) => {
+    setSavingWaTag(id);
+    try {
+      const res = await fetch("/api/admin/wa-tag", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, type, waMessaged: newVal }),
+      });
+      if (res.ok) {
+        toast.success(newVal ? "Marked as WA Sent!" : "WA tag removed");
+        setData((prev) => {
+          const newData = { ...prev };
+          const items = [...newData.items];
+          const index = items.findIndex(
+            (item) => (item.registrationId || item.leadId) === id
+          );
+          if (index !== -1) items[index].waMessaged = newVal;
+          newData.items = items;
+          return newData;
+        });
+      } else {
+        toast.error("Failed to update WA tag");
+      }
+    } catch (error) {
+      toast.error("An error occurred");
+    } finally {
+      setSavingWaTag(null);
     }
   };
 
@@ -217,6 +248,8 @@ export default function AdminDashboard() {
                     onSaveRemark={handleSaveRemark}
                     savingStatus={savingStatus}
                     onSaveStatus={handleSaveStatus}
+                    savingWaTag={savingWaTag}
+                    onWaTag={handleWaTag}
                   />
                 ))}
                 
@@ -287,7 +320,7 @@ export default function AdminDashboard() {
   );
 }
 
-function TableRow({ item, savingRemark, onSaveRemark, savingStatus, onSaveStatus }) {
+function TableRow({ item, savingRemark, onSaveRemark, savingStatus, onSaveStatus, savingWaTag, onWaTag }) {
   const [localRemark, setLocalRemark] = useState(item.remarks || "");
   const isChanged = localRemark !== (item.remarks || "");
 
@@ -336,9 +369,26 @@ function TableRow({ item, savingRemark, onSaveRemark, savingStatus, onSaveStatus
       
       <td className="px-6 py-5 whitespace-nowrap">
         <div className="font-bold text-zinc-900 text-base">{item.name}</div>
-        <a href={`https://wa.me/91${item.phone?.replace(/\\D/g, "")}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 font-medium hover:underline mt-1 block">
+        <a href={`https://wa.me/91${item.phone?.replace(/\D/g, "")}?text=${encodeURIComponent("Hi sir apko food license banwana hai kya")}`} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 font-medium hover:underline mt-1 block">
           {item.phone}
         </a>
+        <button
+          onClick={() => onWaTag(targetId, targetType, !item.waMessaged)}
+          disabled={savingWaTag === targetId}
+          title={item.waMessaged ? "Click to remove WA tag" : "Mark as WA Messaged"}
+          className={`mt-1.5 inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border transition-all ${
+            item.waMessaged
+              ? "bg-green-100 text-green-700 border-green-300 hover:bg-green-200"
+              : "bg-zinc-100 text-zinc-500 border-zinc-200 hover:bg-zinc-200"
+          } disabled:opacity-50`}
+        >
+          {savingWaTag === targetId ? (
+            <Loader2 className="w-2.5 h-2.5 animate-spin" />
+          ) : (
+            <span>{item.waMessaged ? "✓" : "+"}</span>
+          )}
+          WA Sent
+        </button>
       </td>
 
       <td className="px-6 py-5 whitespace-nowrap">
